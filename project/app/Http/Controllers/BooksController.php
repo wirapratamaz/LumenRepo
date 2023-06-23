@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Books;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 
 class BooksController extends Controller
 {
@@ -15,14 +15,14 @@ class BooksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): JsonResponse
-    {
-        $books = Books::withTrashed()->get();
+    public function index(): Response
+{
+    $books = Books::withTrashed()->get();
 
-        return response()->json([
-            'data' => $books
-        ], 200);
-    }
+    return response(json_encode([
+        'data' => $books
+    ]), 200);
+}
 
     /**
      * Store a newly created resource in storage.
@@ -30,7 +30,7 @@ class BooksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
@@ -59,9 +59,9 @@ class BooksController extends Controller
      * Display the specified resource.
      *
      * @param  string  $book
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(string $book): JsonResponse
+    public function show(string $book)
     {
         $book = Books::find($book);
 
@@ -81,9 +81,9 @@ class BooksController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $book
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, string $book): JsonResponse
+    public function update(Request $request, string $book)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
@@ -120,9 +120,9 @@ class BooksController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  string  $book
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(string $book): JsonResponse
+    public function destroy(string $book)
     {
         $book = Books::find($book);
 
@@ -139,8 +139,8 @@ class BooksController extends Controller
         ], 200);
     }
 
-    //softdelete
-    public function softdestroy(string $book): JsonResponse
+    // Soft delete
+    public function softdestroy(string $book)
     {
         try {
             $book = Books::findOrFail($book);
